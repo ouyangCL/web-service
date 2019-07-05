@@ -1,6 +1,7 @@
 package com.webservice.config;
 
-import com.webservice.service.TestService;
+import com.webservice.service.NciicServicesPortTypeImpl;
+import com.webservice.ws.NciicServicesPortType;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;
@@ -16,14 +17,14 @@ import javax.xml.ws.Endpoint;
 @Configuration
 public class WebServiceConfig {
     @Autowired
-    private TestService testService;
+    private NciicServicesPortType nciicServicesPortType;
     /**
      * 注入servlet  bean name不能dispatcherServlet 否则会覆盖dispatcherServlet
      * @return
      */
     @Bean(name = "cxfServlet")
     public ServletRegistrationBean cxfServlet() {
-        return new ServletRegistrationBean(new CXFServlet(),"/service/*");
+        return new ServletRegistrationBean(new CXFServlet(),"/nciic_ws/*");
     }
 
 
@@ -38,7 +39,7 @@ public class WebServiceConfig {
      */
     @Bean(name = "WebServiceDemoEndpoint")
     public Endpoint sweptPayEndpoint() {
-        EndpointImpl endpoint = new EndpointImpl(springBus(), testService);
+        EndpointImpl endpoint = new EndpointImpl(springBus(), nciicServicesPortType);
         endpoint.publish("/webservice");
         return endpoint;
     }
